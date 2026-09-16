@@ -1,0 +1,133 @@
+@model IEnumerable<EmployeeLeaveManagementSys.DTOs.EmployeeDto>
+
+@{
+    ViewData["Title"] = "Employees";
+}
+
+<h1>Employees</h1>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">Add Employee</a>
+    <form asp-action="Index" method="get" class="mb-3">
+        <div class="input-group" style="max-width: 500px;">
+            <input type="text"
+                   name="searchString"
+                   value="@ViewBag.SearchString"
+                   class="form-control"
+                   placeholder="Search employee by name..." />
+
+            <button type="submit" class="btn btn-primary">
+                Search
+            </button>
+
+            <a asp-action="Index" class="btn btn-secondary">
+                Clear
+            </a>
+        </div>
+    </form>
+</p>
+
+@if (Model != null && Model.Any())
+{
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>
+                    <a asp-action="Index"
+                       asp-route-searchString="@ViewBag.SearchString"
+                       asp-route-sortOrder="@ViewBag.NameSortParm"
+                       asp-route-page="1">
+                        Name
+                    </a>
+                </th>
+
+                <th>
+                    <a asp-action="Index"
+                       asp-route-searchString="@ViewBag.SearchString"
+                       asp-route-sortOrder="@ViewBag.EmailSortParm"
+                       asp-route-page="1">
+                        Email
+                    </a>
+                </th>
+
+                <th>Phone</th>
+                <th>Department</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (var employee in Model)
+            {
+                <tr>
+                    <td>@employee.Name</td>
+                    <td>@employee.Email</td>
+                    <td>@employee.Phone</td>
+                    <td>@employee.DepartmentName</td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@employee.Id">Edit</a> |
+                        <a asp-action="Details" asp-route-id="@employee.Id">Details</a> |
+                        <a asp-action="Delete" asp-route-id="@employee.Id">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <div class="alert alert-info"> 
+        @if (!String.IsNullOrWhiteSpace((string)ViewBag.SearchString))
+        {
+            <text>No employees found for "@ViewBag.SearchString".</text>
+        }
+        else
+        {
+            <text>No employees found.</text>
+        }
+    </div>
+}
+@if (ViewBag.TotalPages > 1)
+{
+    <nav aria-label="Employee pagination">
+        <ul class="pagination">
+
+            @if (ViewBag.CurrentPage > 1)
+            {
+                <li class="page-item">
+                    <a class="page-link"
+                       asp-action="Index"
+                       asp-route-page="@(ViewBag.CurrentPage - 1)"
+                       asp-route-searchString="@ViewBag.SearchString">
+                        Previous
+                    </a>
+                </li>
+            }
+
+            @for (int i = 1; i <= ViewBag.TotalPages; i++)
+            {
+                <li class="page-item @(i == ViewBag.CurrentPage ? "active" : "")">
+                    <a class="page-link"
+                       asp-action="Index"
+                       asp-route-page="@i"
+                       asp-route-searchString="@ViewBag.SearchString">
+                        @i
+                    </a>
+                </li>
+            }
+
+            @if (ViewBag.CurrentPage < ViewBag.TotalPages)
+            {
+                <li class="page-item">
+                    <a class="page-link"
+                       asp-action="Index"
+                       asp-route-page="@(ViewBag.CurrentPage + 1)"
+                       asp-route-searchString="@ViewBag.SearchString">
+                        Next
+                    </a>
+                </li>
+            }
+
+        </ul>
+    </nav>
+}

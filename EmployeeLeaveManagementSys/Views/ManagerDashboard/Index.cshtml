@@ -1,0 +1,178 @@
+﻿@model IEnumerable<EmployeeLeaveManagementSys.Models.LeaveRequest>
+
+@{
+    ViewData["Title"] = "Manager Dashboard";
+}
+
+<div class="container">
+
+    <h1 class="mb-4">Manager Dashboard</h1>
+
+    <!-- Summary Cards -->
+    <div class="row">
+
+        <div class="col-md-4 mb-3">
+            <div class="card text-white bg-primary">
+                <div class="card-body">
+                    <h5 class="card-title">Total Employees</h5>
+                    <h2>@ViewBag.TotalEmployees</h2>
+                    <a asp-controller="Employee"
+                       asp-action="Index"
+                       class="btn btn-light">
+                        View Employees
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-3">
+            <div class="card text-white bg-secondary">
+                <div class="card-body">
+                    <h5 class="card-title">Total Departments</h5>
+                    <h2>@ViewBag.TotalDepartments</h2>
+                    <a asp-controller="Department"
+                       asp-action="Index"
+                       class="btn btn-light">
+                        View Departments
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-3">
+            <div class="card text-white bg-info">
+                <div class="card-body">
+                    <h5 class="card-title">Total Leave Applications</h5>
+                    <h2>@ViewBag.TotalLeaves</h2>
+                    <a asp-controller="LeaveRequest"
+                       asp-action="Index"
+                       class="btn btn-light">
+                        View Leaves
+                    </a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Leave Status Cards -->
+    <div class="row mt-3">
+
+        <div class="col-md-4 mb-3">
+            <div class="card border-warning">
+                <div class="card-body">
+                    <h5>Pending Leaves</h5>
+                    <h2>@ViewBag.PendingLeaves</h2>
+                    <a asp-controller="LeaveApproval"
+                       asp-action="Index"
+                       class="btn btn-warning">
+                        Review Leaves
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-3">
+            <div class="card border-success">
+                <div class="card-body">
+                    <h5>Approved Leaves</h5>
+                    <h2>@ViewBag.ApprovedLeaves</h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-3">
+            <div class="card border-danger">
+                <div class="card-body">
+                    <h5>Rejected Leaves</h5>
+                    <h2>@ViewBag.RejectedLeaves</h2>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Recent Leave Applications -->
+    <div class="mt-5">
+
+        <h2>Recent Leave Applications</h2>
+
+        <table class="table table-bordered table-striped mt-3">
+
+            <thead>
+                <tr>
+                    <th>Employee</th>
+                    <th>Leave Type</th>
+                    <th>Start Date</th>
+                    <th>End Date</th>
+                    <th>Status</th>
+                    <th>Applied Date</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                @if (!Model.Any())
+                {
+                    <tr>
+                        <td colspan="6" class="text-center">
+                            No leave applications found.
+                        </td>
+                    </tr>
+                }
+                else
+                {
+                    @foreach (var leave in Model)
+                    {
+                        <tr>
+                            <td>
+                                @leave.Employee?.Name
+                            </td>
+
+                            <td>
+                                @leave.LeaveType
+                            </td>
+
+                            <td>
+                                @leave.StartDate.ToString("dd-MM-yyyy")
+                            </td>
+
+                            <td>
+                                @leave.EndDate.ToString("dd-MM-yyyy")
+                            </td>
+
+                            <td>
+                                @if (leave.Status == LeaveStatus.Pending)
+                                {
+                                    <span class="badge bg-warning text-dark">
+                                        Pending
+                                    </span>
+                                }
+                                else if (leave.Status == LeaveStatus.Approved)
+                                {
+                                    <span class="badge bg-success">
+                                        Approved
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-danger">
+                                        Rejected
+                                    </span>
+                                }
+                            </td>
+
+                            <td>
+                                @leave.AppliedDate.ToString("dd-MM-yyyy")
+                            </td>
+                        </tr>
+                    }
+                }
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>

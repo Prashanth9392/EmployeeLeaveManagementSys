@@ -1,0 +1,133 @@
+@model EmployeeLeaveManagementSys.DTOs.LeaveRequestDto
+
+@{
+    ViewData["Title"] = "Apply for Leave";
+}
+
+<h1>Apply for Leave</h1>
+
+<hr />
+
+<div class="row">
+    <div class="col-md-6">
+
+        <form asp-action="Create" method="post">
+
+            <div asp-validation-summary="ModelOnly"
+                 class="text-danger">
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="EmployeeId" class="form-label">
+                    Employee
+                </label>
+
+                <select asp-for="EmployeeId"
+                        class="form-control">
+
+                    <option value="">-- Select Employee --</option>
+
+                    @foreach (var employee in ViewBag.Employees)
+                    {
+                        <option value="@employee.Id">
+                            @employee.Name
+                        </option>
+                    }
+
+                </select>
+
+                <span asp-validation-for="EmployeeId"
+                      class="text-danger">
+                </span>
+            </div>
+
+            <div class="mb-3">
+
+                <label asp-for="LeaveType"
+                       class="form-label">
+                    Leave Type
+                </label>
+                <select asp-for="LeaveType"
+                        class="form-control">
+
+                    <option value="">-- Select Leave Type --</option>
+                    <option value="Casual Leave">Casual Leave</option>
+                    <option value="Sick Leave">Sick Leave</option>
+                    <option value="Earned Leave">Earned Leave</option>
+
+                </select>
+
+                <span asp-validation-for="LeaveType"
+                      class="text-danger">
+                </span>
+
+            </div>
+
+            <div class="mb-3">
+
+                <label asp-for="StartDate"
+                       class="form-label">
+                    Start Date
+                </label>
+                <input asp-for="StartDate"
+                       type="date"
+                       class="form-control" />
+
+                <span asp-validation-for="StartDate"
+                      class="text-danger">
+                </span>
+
+            </div>
+
+            <div class="mb-3">
+
+                <label asp-for="EndDate"
+                       class="form-label">
+                    End Date
+                </label>
+                <input asp-for="EndDate"
+                       type="date"
+                       class="form-control" />
+
+                <span asp-validation-for="EndDate"
+                      class="text-danger">
+                </span>
+
+            </div>
+
+            <div class="mb-3">
+
+                <label asp-for="Reason"
+                       class="form-label">
+                    Reason
+                </label>
+
+                <textarea asp-for="Reason"
+                          class="form-control"
+                          rows="3"></textarea>
+                <span asp-validation-for="Reason"
+                      class="text-danger">
+                </span>
+
+            </div>
+
+            <button type="submit"
+                    class="btn btn-primary">
+                Apply Leave
+            </button>
+
+            <a asp-action="Index"
+               class="btn btn-secondary">
+                Back to List
+            </a>
+
+        </form>
+
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

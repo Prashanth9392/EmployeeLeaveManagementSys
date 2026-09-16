@@ -1,0 +1,179 @@
+﻿@model IEnumerable<EmployeeLeaveManagementSys.Models.LeaveRequest>
+
+@{
+    ViewData["Title"] = "Reports";
+}
+
+<div class="container">
+
+    <h1 class="mb-4">Reports</h1>
+
+    <!-- Summary -->
+    <div class="row">
+
+        <div class="col-md-4 mb-3">
+            <div class="card bg-primary text-white">
+                <div class="card-body">
+                    <h5>Total Employees</h5>
+                    <h2>@ViewBag.TotalEmployees</h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-3">
+            <div class="card bg-secondary text-white">
+                <div class="card-body">
+                    <h5>Total Departments</h5>
+                    <h2>@ViewBag.TotalDepartments</h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-3">
+            <div class="card bg-info text-white">
+                <div class="card-body">
+                    <h5>Total Leave Applications</h5>
+                    <h2>@ViewBag.TotalLeaves</h2>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Leave Status Summary -->
+    <h2 class="mt-4">Leave Status Summary</h2>
+
+    <div class="row">
+
+        <div class="col-md-4 mb-3">
+            <div class="card border-warning">
+                <div class="card-body">
+                    <h5>Pending</h5>
+                    <h2>@ViewBag.PendingLeaves</h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-3">
+            <div class="card border-success">
+                <div class="card-body">
+                    <h5>Approved</h5>
+                    <h2>@ViewBag.ApprovedLeaves</h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-3">
+            <div class="card border-danger">
+                <div class="card-body">
+                    <h5>Rejected</h5>
+                    <h2>@ViewBag.RejectedLeaves</h2>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Detailed Leave Report -->
+    <h2 class="mt-5">Leave Report</h2>
+
+    <div class="table-responsive">
+
+        <table class="table table-bordered table-striped">
+
+            <thead>
+                <tr>
+                    <th>Employee</th>
+                    <th>Department</th>
+                    <th>Leave Type</th>
+                    <th>Start Date</th>
+                    <th>End Date</th>
+                    <th>Days</th>
+                    <th>Reason</th>
+                    <th>Status</th>
+                    <th>Applied Date</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                @if (!Model.Any())
+                {
+                    <tr>
+                        <td colspan="9" class="text-center">
+                            No leave records found.
+                        </td>
+                    </tr>
+                }
+                else
+                {
+                    @foreach (var leave in Model)
+                    {
+                        var days = (leave.EndDate - leave.StartDate).Days + 1;
+
+                        <tr>
+
+                            <td>
+                                @leave.Employee?.Name
+                            </td>
+
+                            <td>
+                                @leave.Employee?.Department?.Name
+                            </td>
+
+                            <td>
+                                @leave.LeaveType
+                            </td>
+
+                            <td>
+                                @leave.StartDate.ToString("dd-MM-yyyy")
+                            </td>
+
+                            <td>
+                                @leave.EndDate.ToString("dd-MM-yyyy")
+                            </td>
+
+                            <td>
+                                @days
+                            </td>
+
+                            <td>
+                                @leave.Reason
+                            </td>
+
+                            <td>
+                                @if (leave.Status == LeaveStatus.Pending)
+                                {
+                                    <span class="badge bg-warning text-dark">
+                                        Pending
+                                    </span>
+                                }
+                                else if (leave.Status == LeaveStatus.Approved)
+                                {
+                                    <span class="badge bg-success">
+                                        Approved
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-danger">
+                                        Rejected
+                                    </span>
+                                }
+                            </td>
+
+                            <td>
+                                @leave.AppliedDate.ToString("dd-MM-yyyy")
+                            </td>
+
+                        </tr>
+                    }
+                }
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>

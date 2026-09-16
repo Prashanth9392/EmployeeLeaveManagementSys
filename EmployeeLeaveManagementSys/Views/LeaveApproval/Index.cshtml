@@ -1,0 +1,100 @@
+﻿@model IEnumerable<EmployeeLeaveManagementSys.DTOs.LeaveRequestDto>
+
+@{
+    ViewData["Title"] = "Leave Approval";
+}
+
+<h1>Leave Approval</h1>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Employee</th>
+            <th>Department</th>
+            <th>Leave Type</th>
+            <th>Start Date</th>
+            <th>End Date</th>
+            <th>Reason</th>
+            <th>Status</th>
+            <th>Applied Date</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.EmployeeName</td>
+
+                <td>@item.EmployeeDepartmentName</td>
+
+                <td>@item.LeaveType</td>
+
+                <td>@item.StartDate.ToString("dd-MM-yyyy")</td>
+
+                <td>@item.EndDate.ToString("dd-MM-yyyy")</td>
+
+                <td>@item.Reason</td>
+
+                <td>
+                    @if (item.Status == EmployeeLeaveManagementSys.Models.LeaveStatus.Pending)
+                    {
+                        <span class="badge bg-warning text-dark">
+                            Pending
+                        </span>
+                    }
+                    else if (item.Status == EmployeeLeaveManagementSys.Models.LeaveStatus.Approved)
+                    {
+                        <span class="badge bg-success">
+                            Approved
+                        </span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-danger">
+                            Rejected
+                        </span>
+                    }
+                </td>
+
+                <td>@item.AppliedDate.ToString("dd-MM-yyyy")</td>
+
+                <td>
+                    @if (item.Status == EmployeeLeaveManagementSys.Models.LeaveStatus.Pending)
+                    {
+                        <form asp-action="Approve"
+                              asp-route-id="@item.Id"
+                              method="post"
+                              style="display:inline">
+
+                            @Html.AntiForgeryToken()
+
+                            <button type="submit"
+                                    class="btn btn-success btn-sm">
+                                Approve
+                            </button>
+                        </form>
+
+                        <form asp-action="Reject"
+                              asp-route-id="@item.Id"
+                              method="post"
+                              style="display:inline">
+
+                            @Html.AntiForgeryToken()
+
+                            <button type="submit"
+                                    class="btn btn-danger btn-sm">
+                                Reject
+                            </button>
+                        </form>
+                    }
+                    else
+                    {
+                        <span class="text-muted">No Action</span>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
