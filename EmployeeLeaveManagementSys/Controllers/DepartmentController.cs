@@ -11,7 +11,7 @@ namespace EmployeeLeaveManagementSys.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly IMapper _mapper;
-
+        
         public DepartmentController(
             ApplicationDbContext context,
             IMapper mapper)
